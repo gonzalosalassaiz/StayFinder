@@ -2,11 +2,31 @@
 
 > Multi-agent hotel recommendation system built with Java, JADE, Java Swing, and SQL.
 
+[![Java](https://img.shields.io/badge/Java-17%2B-orange)](https://www.oracle.com/java/)
+[![JADE](https://img.shields.io/badge/JADE-Multi--Agent%20System-blue)](https://jade.tilab.com/)
+[![MySQL](https://img.shields.io/badge/MySQL-Database-blue)](https://www.mysql.com/)
+[![Swing](https://img.shields.io/badge/Java-Swing-red)](https://docs.oracle.com/javase/tutorial/uiswing/)
+
 ## Overview
 
-StayFinder is a multi-agent accommodation search and recommendation system designed to help users find suitable hotels across Spanish cities.
+StayFinder is a multi-agent accommodation search and recommendation system developed in Java to help users find suitable hotels across Spanish cities.
 
-The application combines a graphical user interface, agent-based communication, SQL data retrieval, and rule-based recommendation logic to transform user preferences into ranked accommodation options.
+The application combines a desktop graphical interface, autonomous software agents, relational database access, and context-aware recommendation rules to transform user preferences into ranked accommodation options.
+
+The system was developed as an academic project focused on **Intelligent Systems and Multi-Agent Systems**.
+
+## Objectives
+
+The main objectives of StayFinder are to:
+
+- Provide an intuitive interface for searching accommodation.
+- Retrieve available hotels according to user-defined constraints.
+- Separate perception, processing, and presentation responsibilities across specialized agents.
+- Use contextual recommendation rules to rank accommodation options.
+- Demonstrate communication and service discovery in a multi-agent environment.
+- Integrate Java, JADE, SQL, and a desktop user interface into a single application.
+
+## User Preferences
 
 Users can define criteria such as:
 
@@ -16,52 +36,68 @@ Users can define criteria such as:
 - Minimum and maximum nightly price
 - Trip type, such as tourism or leisure
 
-The system retrieves matching accommodation data from a relational database and applies context-aware scoring rules based on seasonality, trip type, price, location, capacity, and available amenities.
+These preferences are processed by the agent system and used to retrieve and rank compatible accommodation options.
 
-## Architecture
+## System Architecture
 
 StayFinder follows a multi-agent architecture implemented with **JADE (Java Agent DEvelopment Framework)**.
 
-### Main agents
+### Main Agents
 
 **UIAgent**
-- Handles interaction with the graphical user interface.
-- Collects the user's search preferences.
-- Sends search requests to the perception layer.
-- Displays the ranked accommodation results.
+
+Responsible for the presentation layer and user interaction.
+
+- Collects search preferences from the graphical interface.
+- Creates and sends search requests.
+- Receives ranked accommodation results.
+- Presents recommendations to the user.
 
 **PerceptionAgent**
-- Receives the user's search request.
-- Queries the SQL database for compatible accommodations.
-- Filters results according to availability, destination, capacity, and price constraints.
-- Sends the retrieved accommodation data to the processing agent.
+
+Responsible for retrieving and filtering accommodation data.
+
+- Receives search requests.
+- Queries the SQL database.
+- Filters accommodations by destination, dates, capacity, and price.
+- Creates the data structures required by the processing layer.
+- Discovers the processing service through JADE's Directory Facilitator.
 
 **ProcessingAgent**
-- Receives the candidate accommodations.
-- Applies recommendation and scoring rules.
-- Considers factors such as seasonality, trip type, price, location, capacity, and amenities.
-- Ranks the available accommodations before returning the results.
 
-### Communication flow
+Responsible for recommendation and ranking.
+
+- Receives candidate accommodations.
+- Applies context-aware scoring rules.
+- Considers seasonality and trip type.
+- Evaluates accommodation characteristics and amenities.
+- Sorts the available options according to their calculated score.
+
+### Communication Flow
 
 ```text
 User
   │
   ▼
 UIAgent
-  │  SearchRequest
+  │
+  │ SearchRequest
   ▼
 PerceptionAgent
-  │  SQL query
+  │
+  │ SQL query
   ▼
 Relational Database
-  │  Matching accommodations
+  │
+  │ Matching accommodations
   ▼
 PerceptionAgent
-  │  Accommodation data
+  │
+  │ Accommodation data
   ▼
 ProcessingAgent
-  │  Context-aware scoring
+  │
+  │ Context-aware scoring
   ▼
 UIAgent
   │
@@ -69,47 +105,49 @@ UIAgent
 Ranked recommendations
 ```
 
-Agents communicate through JADE using ACL messages and service discovery through the Directory Facilitator.
+Agents communicate through **JADE ACL messages**, while the Directory Facilitator is used for service discovery.
 
-## Recommendation Logic
+## Recommendation Strategy
 
-The processing layer uses a rule-based scoring system rather than a trained machine-learning model.
+The processing layer currently uses a **rule-based scoring system rather than a trained machine-learning model**.
 
-The recommendation score can take into account:
+The ranking logic considers multiple accommodation characteristics, including:
 
-- **Price per night**
-- **Guest capacity**
-- **Bathrooms per guest**
-- **Accommodation size**
-- **Distance to the city centre**
-- **Customer rating**
-- **Wi-Fi**
-- **Parking**
-- **Garden**
-- **Swimming pool**
-- **Air conditioning**
-- **Heating**
-- **Seasonality**
-- **Trip type**
+- Price per night
+- Guest capacity
+- Bathrooms per guest
+- Accommodation size
+- Distance to the city centre
+- Customer rating
+- Wi-Fi availability
+- Parking
+- Garden
+- Swimming pool
+- Air conditioning
+- Heating
+- Seasonality
+- Trip type
 
-Different scoring strategies are applied depending on the combination of season and trip type, allowing the system to adapt recommendations to different travel contexts.
+Different scoring strategies are selected according to the travel context, allowing the system to adapt the ranking to different combinations of season and trip type.
+
+This approach provides a clear foundation for a future recommendation engine based on configurable weights or machine-learning ranking models.
 
 ## Technology Stack
 
 | Technology | Purpose |
 |---|---|
-| Java | Core application and agent implementation |
-| JADE | Multi-agent system and ACL communication |
-| Java Swing | Desktop graphical user interface |
-| MySQL / SQL | Accommodation data storage and retrieval |
-| JDBC | Database connectivity |
-| JCalendar | Date selection in the UI |
-| JGoodies | UI components and styling |
-| JUnit | Testing support |
+| **Java** | Core application and agent implementation |
+| **JADE** | Multi-agent architecture, communication, and service discovery |
+| **Java Swing** | Desktop graphical user interface |
+| **MySQL / SQL** | Accommodation data storage and retrieval |
+| **JDBC** | Database connectivity |
+| **JCalendar** | Date selection in the user interface |
+| **JGoodies** | UI components and styling |
+| **JUnit** | Testing support |
 
 ## Project Structure
 
-The repository currently follows a Java project structure:
+The current repository reflects the original academic Java project structure:
 
 ```text
 StayFinder/
@@ -140,53 +178,97 @@ StayFinder/
 └── MTPs-Main-Container.txt
 ```
 
-## Running the Project
+## Getting Started
 
-The project requires:
+### Prerequisites
 
 - Java Development Kit (JDK)
 - JADE
 - MySQL
-- The dependencies included in the `lib/` directory
+- Dependencies included in the `lib/` directory
 
-Before running the application, configure the database connection in `PerceptionAgent.java` with the appropriate local MySQL credentials and database configuration.
+### Database Configuration
 
-The project also relies on a JADE main container and platform configuration.
+The application requires a MySQL database containing the accommodation and reservation data used by the perception agent.
 
-> **Note:** The current repository reflects the original academic implementation. A future iteration can migrate the project to a standard Maven or Gradle structure and move environment-specific configuration outside the source code.
+Before running the application:
 
-## Engineering Considerations
+1. Create and configure the required MySQL database.
+2. Update the database connection settings in `PerceptionAgent.java`.
+3. Make sure the required dependencies are available in `lib/`.
+4. Start the JADE platform/main container.
+5. Launch the application through the main GUI.
 
-This project demonstrates several software engineering concepts relevant to distributed and intelligent systems:
+> **Security note:** Database credentials should not be committed to the repository. The current implementation reflects the original academic project and should be refactored to use environment variables or external configuration.
+
+## Engineering Concepts
+
+This project demonstrates several software engineering and AI-related concepts:
 
 - Multi-agent system design
+- Autonomous software agents
 - Agent-to-agent communication
+- JADE ACL messaging
 - Service discovery
-- Object serialization
 - Event-driven GUI interaction
+- Object serialization
 - Relational database access
-- Context-aware recommendation logic
-- Separation between perception, processing, and presentation responsibilities
+- Context-aware recommendation
+- Rule-based scoring
+- Separation of concerns
+- Object-oriented programming
 
-## Future Improvements
+## Engineering Roadmap
 
-Potential improvements include:
+The current implementation provides a functional academic prototype. A production-oriented evolution could include:
 
-- Migrate the project to **Maven or Gradle**
-- Replace hard-coded database credentials with environment variables
-- Extract recommendation rules into dedicated strategy classes
-- Add unit and integration tests
-- Improve database connection management with a connection pool
-- Replace generated `bin/` artifacts with build automation
-- Introduce a clearer domain/application/infrastructure structure
-- Add logging instead of console output
-- Add configurable recommendation weights
-- Introduce a machine-learning ranking model as an alternative to the current rule-based scoring system
-- Add Docker support for the database and application environment
+### Architecture
+
+- Migrate the project to **Maven or Gradle**.
+- Replace the current package structure with a domain-oriented structure.
+- Separate domain, application, infrastructure, and presentation layers.
+- Extract recommendation strategies into dedicated classes.
+
+### Configuration and Security
+
+- Move database credentials to environment variables.
+- Externalize JADE platform configuration.
+- Remove machine-specific network configuration from committed files.
+- Add a clear configuration profile for local development.
+
+### Quality
+
+- Add unit and integration tests.
+- Introduce logging instead of console output.
+- Improve database connection management with a connection pool.
+- Add automated build and test execution.
+- Remove generated `bin/` artifacts from version control.
+
+### Recommendation Engine
+
+- Make recommendation weights configurable.
+- Add explainability for recommendation scores.
+- Evaluate alternative ranking strategies.
+- Introduce a machine-learning ranking model as a future extension.
+
+### Deployment
+
+- Add Docker support for the database and application environment.
+- Document the complete local setup.
+- Automate application startup and database initialization.
 
 ## Academic Context
 
-StayFinder was developed as an academic project focused on **Intelligent Systems and Multi-Agent Systems**, exploring how autonomous software agents can collaborate to process user requests and generate context-aware recommendations.
+StayFinder was developed as an academic project focused on **Intelligent Systems and Multi-Agent Systems**.
+
+The project explores how specialized software agents can collaborate to:
+
+1. Capture user requirements.
+2. Retrieve relevant information from a database.
+3. Process and rank candidate accommodations.
+4. Return context-aware recommendations through a graphical interface.
+
+The project provides a practical example of combining distributed agent communication with rule-based recommendation logic.
 
 ## Author
 
